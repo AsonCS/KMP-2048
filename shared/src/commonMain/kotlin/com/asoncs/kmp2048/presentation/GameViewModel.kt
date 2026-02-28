@@ -17,6 +17,8 @@ class GameViewModel(
     val board: StateFlow<Board> = _board.asStateFlow()
 
     private val _undoStack = mutableListOf<Board>()
+    private val _canUndo = MutableStateFlow(false)
+    val canUndo: StateFlow<Boolean> = _canUndo.asStateFlow()
 
     fun initialize() {
         val saved = repository.loadGame()
@@ -41,14 +43,17 @@ class GameViewModel(
         val newBoard = gameEngine.move(current, direction)
         if (newBoard != current) {
             _board.value = newBoard
+            _canUndo.value = _undoStack.isNotEmpty()
             repository.saveGame(newBoard)
         } else {
             _undoStack.removeLastOrNull()
+            _canUndo.value = _undoStack.isNotEmpty()
         }
     }
 
     fun newGame() {
         _undoStack.clear()
+        _canUndo.value = false
         val highScore = _board.value.highScore
         val newBoard = gameEngine.newGame(highScore = highScore)
         _board.value = newBoard
@@ -59,6 +64,7 @@ class GameViewModel(
     fun undo() {
         val previous = _undoStack.removeLastOrNull() ?: return
         _board.value = previous
+        _canUndo.value = _undoStack.isNotEmpty()
         repository.saveGame(previous)
     }
 
@@ -69,9 +75,6 @@ class GameViewModel(
             repository.saveGame(_board.value)
         }
     }
-
-    val canUndo: Boolean
-        get() = _undoStack.isNotEmpty()
 
     companion object {
         private const val MAX_UNDO_HISTORY = 10

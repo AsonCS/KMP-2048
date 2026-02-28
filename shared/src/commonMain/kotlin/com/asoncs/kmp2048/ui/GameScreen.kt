@@ -23,6 +23,7 @@ fun GameScreen(
     viewModel: GameViewModel
 ) {
     val board by viewModel.board.collectAsState()
+    val canUndo by viewModel.canUndo.collectAsState()
     var showWinDialog by remember { mutableStateOf(false) }
     var hasShownWinDialog by remember { mutableStateOf(false) }
 
@@ -75,7 +76,7 @@ fun GameScreen(
                 hasShownWinDialog = false
             },
             onUndo = { viewModel.undo() },
-            canUndo = viewModel.canUndo
+            canUndo = canUndo
         )
 
         Spacer(modifier = Modifier.height(16.dp))
