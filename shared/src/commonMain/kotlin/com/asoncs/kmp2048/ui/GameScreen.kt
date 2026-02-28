@@ -115,7 +115,7 @@ fun GameScreen(
     // Win dialog
     if (showWinDialog) {
         AlertDialog(
-            onDismissRequest = { showWinDialog = false },
+            onDismissRequest = { /* Don't allow dismissing without choosing */ },
             title = {
                 Text(
                     text = "You Win!",
