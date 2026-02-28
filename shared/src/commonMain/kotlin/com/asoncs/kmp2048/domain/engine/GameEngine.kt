@@ -48,7 +48,9 @@ class GameEngine(
         )
 
         return spawnTile(newBoard).let { boardAfterSpawn ->
-            if (isGameOver(boardAfterSpawn)) {
+            if (newStatus == GameStatus.WON) {
+                boardAfterSpawn
+            } else if (isGameOver(boardAfterSpawn)) {
                 boardAfterSpawn.copy(status = GameStatus.LOST)
             } else {
                 boardAfterSpawn
