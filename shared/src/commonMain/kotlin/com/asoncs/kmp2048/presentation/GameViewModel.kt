@@ -35,19 +35,15 @@ class GameViewModel(
         if (current.status == GameStatus.LOST) return
         if (current.status == GameStatus.WON) return
 
-        _undoStack.add(current)
-        if (_undoStack.size > MAX_UNDO_HISTORY) {
-            _undoStack.removeAt(0)
-        }
-
         val newBoard = gameEngine.move(current, direction)
         if (newBoard != current) {
+            _undoStack.add(current)
+            if (_undoStack.size > MAX_UNDO_HISTORY) {
+                _undoStack.removeAt(0)
+            }
             _board.value = newBoard
             _canUndo.value = _undoStack.isNotEmpty()
             repository.saveGame(newBoard)
-        } else {
-            _undoStack.removeLastOrNull()
-            _canUndo.value = _undoStack.isNotEmpty()
         }
     }
 
