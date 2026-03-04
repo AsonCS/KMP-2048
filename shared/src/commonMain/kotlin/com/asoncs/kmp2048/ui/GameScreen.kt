@@ -35,6 +35,8 @@ fun GameScreen(
         if (board.status == GameStatus.WON && !hasShownWinDialog) {
             showWinDialog = true
             hasShownWinDialog = true
+        } else if (board.status == GameStatus.IN_PROGRESS) {
+            hasShownWinDialog = false
         }
     }
 
